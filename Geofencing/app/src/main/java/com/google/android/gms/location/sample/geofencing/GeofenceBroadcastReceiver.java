@@ -18,6 +18,10 @@ package com.google.android.gms.location.sample.geofencing;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
+import android.widget.Toast;
+
+import java.io.File;
 
 /**
  * Receiver for geofence transition changes.
@@ -38,6 +42,19 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // Enqueues a JobIntentService passing the context and intent as parameters
+
+        File folder = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "Receiver");
+        boolean success = true;
+        if (!folder.exists()) {
+            success = folder.mkdirs();
+        }
+        if (success) {
+            Toast.makeText(context,"Success",Toast.LENGTH_LONG).show();
+        } else {
+            // Do something else on failure
+            Toast.makeText(context,"Failed",Toast.LENGTH_LONG).show();
+        }
         GeofenceTransitionsJobIntentService.enqueueWork(context, intent);
     }
 }

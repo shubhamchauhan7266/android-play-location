@@ -24,15 +24,18 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +92,19 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
+
+            File folder = new File(Environment.getExternalStorageDirectory() +
+                    File.separator + "Location");
+            boolean success = true;
+            if (!folder.exists()) {
+                success = folder.mkdirs();
+            }
+            if (success) {
+                Toast.makeText(this,"Success",Toast.LENGTH_LONG).show();
+            } else {
+                // Do something else on failure
+                Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show();
+            }
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
